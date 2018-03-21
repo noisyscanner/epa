@@ -1,0 +1,213 @@
+FORMAT: 1A
+
+# EPA API
+
+# Group Users
+Group of user related resources. Card number and PIN are never returned for security reasons.
+
+## Create a new User [POST /v1/users]
+This call required a Client Bearer token
+
++ Attributes
+    + first_name (string)
+    + surname (string)
+    + email (string)
+    + mobile_number (string)
+    + employee_id (string)
+    + card_number (number)
+    + pin (number)
+    + balance (number)
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Bearer 73399c7d9e2c655ad7fe8d3ead243ee9
+
+    + Body
+
+            {
+                "first_name": "Brad",
+                "surname": "Reed",
+                "email": "brad@bradreed.co.uk",
+                "mobile_number": "07123456789",
+                "employee_id": "B3AKS22",
+                "card_number": 1234567890,
+                "pin": 1234
+            }
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Headers
+
+            Location: /v1/users/me
+
+    + Attributes
+        + user
+            + _id: 5aa9092d2ebee0825de1a8da
+            + first_name: brad
+            + surname: Reed
+            + email: brad@bradreed.co.uk
+            + employee_id: B3AKS22
+            + balance: 0 (number)
+        + links (array[object])
+            + (object)
+                + rel: self
+                + href: /v1/users/me
+            + (object)
+                + rel: balance
+                + href: /v1/users/me/balance
+
+# Current User [/v1/users/me]
+
+## Retrieve the current User [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer 68151b218de9f633f67ca49621a42052
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes
+        + user
+            + _id: 5aa9092d2ebee0825de1a8da
+            + first_name: Brad
+            + surname: Reed
+            + email: brad@bradreed.co.uk
+            + mobile_number: 07123456789
+            + employee_id: B3AKS22
+            + balance: 0 (number)
+        + links (array[object])
+            + (object)
+                + rel: self
+                + href: /v1/users/me
+            + (object)
+                + rel: balance
+                + href: /v1/users/me/balance
+
+## Delete the current User [DELETE]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer 68151b218de9f633f67ca49621a42052
+
++ Response 204
+
+
+# Current User's Balance [/v1/users/me/balance]
+
+## Retrieve the current User's balance [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer 68151b218de9f633f67ca49621a42052
+
++ Response 200 (application/json; charset=utf-8)
+
+            {
+                "balance": 10.07,
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1/users/me/balance"
+                    },
+                    {
+                        "rel": "user",
+                        "href": "/v1/users/me"
+                    }
+                ]
+            }
+
+
+## Increment the current User's balance [PATCH]
+
++ Attributes
+
+    + add: 5.55 (number) - Pounds and pence value to add to the user's balance
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Bearer 68151b218de9f633f67ca49621a42052
+
+    + Body
+
+            {"add": 5.55}
+
++ Response 200 (application/json; charset=utf-8)
+
+            {
+                "balance": 15.62,
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1/users/me/balance"
+                    },
+                    {
+                        "rel": "user",
+                        "href": "/v1/users/me"
+                    }
+                ]
+            }
+
+# Group Cards
+
+## Check if a Card is registered [HEAD /v1/cards/{card_number}]
+
++ Parameters
+    + card_number: `1234567890` (number) Card number to check
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer 73399c7d9e2c655ad7fe8d3ead243ee9
+
++ Response 200
+
++ Response 404
+
+
+# Group Auth
+
+## Get an Access Token for a User [POST /v1/tokens]
+
++ Attributes
+    + grant_type
+    + card_number (number)
+    + pin (number)
+
++ Request (application/json)
+
+        {
+            "grant_type": "card",
+            "card_number": "1234567890",
+            "pin": 1234
+        }
+
++ Response 201 (application/json; charset=utf-8)
+
+        {
+            "access_token": "68151b218de9f633f67ca49621a42052",
+            "expires_at": "2018-03-15T12:16:30.308Z"
+        }
+
+## Invalidate the User's Access Token [DELETE /v1/tokens/me]
+For logging out.
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer 68151b218de9f633f67ca49621a42052
+
++ Response 204
+
+    + Body

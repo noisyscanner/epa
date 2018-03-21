@@ -1,0 +1,35 @@
+{
+  "name": "epa",
+  "version": "1.0.0",
+  "description": "Brad's EPA project",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "start": "babel-watch src/index.js",
+    "start-e2e-test": "npm run build && NODE_ENV=test node dist/index.js",
+    "e2e-test": "NODE_ENV=test babel-node `which dredd`; killall -9 node",
+    "test": "NODE_ENV=test mocha test/support/mocha.js test/*Test.js test/**/*Test.js --require babel-core/register",
+    "server": "node dist/index.js",
+    "newclient": "babel-node src/manage.js newclient"
+  },
+  "author": "Brad Reed <brad@bradreed.co.uk>",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-watch": "^2.0.7",
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "dredd": "^5.1.4",
+    "mocha": "^5.0.4"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "mongoose": "^5.0.10",
+    "mongoose-unique-validator": "^2.0.0",
+    "npm": "^5.7.1",
+    "why-is-node-running": "^2.0.2"
+  }
+}
