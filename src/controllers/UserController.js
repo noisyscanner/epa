@@ -48,7 +48,7 @@ export const getBalance = (req, res) => {
     res.send({
         balance: req.user.balance,
         links: getBalanceLinks()
-    })
+    });
 };
 
 // PATCH /v1/users/me/balance

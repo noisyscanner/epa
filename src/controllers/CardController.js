@@ -24,5 +24,5 @@ export const checkCard = (req, res, next) => {
 
         const status = (count === 0) ? 404 : 200;
         res.status(status).send();
-    })
+    });
 };

@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "build": "babel src -d dist",
-    "start": "babel-watch src/index.js",
-    "start-e2e-test": "npm run build && NODE_ENV=test node dist/index.js",
+    "build-and-serve": "npm run build && npm run serve",
     "e2e-test": "NODE_ENV=test babel-node `which dredd`; killall -9 node",
+    "lint": "eslint src/* test/*",
+    "serve": "node dist/index.js",
+    "start": "babel-watch src/index.js",
     "test": "NODE_ENV=test mocha test/support/mocha.js test/*Test.js test/**/*Test.js --require babel-core/register",
-    "server": "node dist/index.js",
     "newclient": "babel-node src/manage.js newclient"
   },
   "author": "Brad Reed <brad@bradreed.co.uk>",
@@ -23,6 +24,7 @@
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
     "dredd": "^5.1.4",
+    "eslint": "^4.19.1",
     "mocha": "^5.0.4"
   },
   "dependencies": {

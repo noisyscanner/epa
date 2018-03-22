@@ -30,13 +30,13 @@ Client ID: ${client.client_id}
 Client Secret ${client.client_secret}`);
     } catch (error) {
         switch (error.code) {
-            case 11000:
-                console.error(`Error saving client: Client with name '${name}' already exists.`);
-                process.exit(0);
-                break;
-            default:
-                console.error('Error saving client:', error);
-                process.exit(2);
+        case 11000:
+            console.error(`Error saving client: Client with name '${name}' already exists.`);
+            process.exit(0);
+            break;
+        default:
+            console.error('Error saving client:', error);
+            process.exit(2);
         }
     }
 

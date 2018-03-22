@@ -25,17 +25,17 @@ export class Validator {
             if (errs.length === 0) {
                 Object.entries(fieldRules).forEach(([ruleName, ruleValue]) => {
                     switch (ruleName) {
-                        case 'oneOf':
-                            if (!(ruleValue instanceof Array)) break;
+                    case 'oneOf':
+                        if (!(ruleValue instanceof Array)) break;
 
-                            if (!ruleValue.includes(fieldValue)) {
-                                errs.push(`${field} must be one of: ${ruleValue.join(', ')}`)
-                            }
-                            break;
-                        case 'type':
-                            if(!Validator.validateType(fieldValue, ruleValue)) {
-                                errs.push(`${field} must be a ${ruleValue.name}`);
-                            }
+                        if (!ruleValue.includes(fieldValue)) {
+                            errs.push(`${field} must be one of: ${ruleValue.join(', ')}`);
+                        }
+                        break;
+                    case 'type':
+                        if (!Validator.validateType(fieldValue, ruleValue)) {
+                            errs.push(`${field} must be a ${ruleValue.name}`);
+                        }
                     }
                 });
             }
@@ -50,10 +50,10 @@ export class Validator {
 
     static validateType(value, type) {
         switch (type) {
-            case Number:
-                return !!parseFloat(value);
-            default:
-                return false;
+        case Number:
+            return !!parseFloat(value);
+        default:
+            return false;
         }
     }
 }

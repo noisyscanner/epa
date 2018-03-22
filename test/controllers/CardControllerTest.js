@@ -1,3 +1,4 @@
+import {describe, it, beforeEach} from 'mocha';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import {server} from '../../src';
@@ -10,15 +11,11 @@ chai.use(chaiHttp);
 describe('CardController', () => {
     describe('/v1/cards/:card_number', () => {
         describe('HEAD', () => {
-            let client, req;
+            let req;
 
             beforeEach((done) => {
                 req = chai.request(server);
-
-                client = createClientWithToken(fooClient, fooClientToken, (newClient) => {
-                    client = newClient;
-                    done();
-                });
+                createClientWithToken(fooClient, fooClientToken, () => done());
             });
 
             it('should return 200 for existing cards', (done) => {
@@ -36,7 +33,7 @@ describe('CardController', () => {
 
             it('should return 404 for non-existent cards', (done) => {
                 req
-                    .head(`/v1/cards/5678901234`)
+                    .head('/v1/cards/5678901234')
                     .set('Authorization', `Bearer ${fooClientToken.token}`)
                     .end((err, res) => {
                         res.should.have.status(404);
@@ -45,5 +42,5 @@ describe('CardController', () => {
                     });
             });
         });
-    })
+    });
 });

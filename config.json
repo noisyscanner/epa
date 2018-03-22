@@ -1,0 +1,9 @@
+{
+  "db": {
+    "uri": "mongodb://localhost/epa",
+    "uri_test": "mongodb://localhost/epa_test"
+  },
+  "oauth": {
+    "token_lifetime_minutes": 5
+  }
+}

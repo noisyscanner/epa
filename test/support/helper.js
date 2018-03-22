@@ -41,7 +41,7 @@ export const createClient = (clientDef, done) => {
         }
 
         done(client);
-    })
+    });
 };
 
 export const createClientWithToken = (clientDef, tokenDef, done) =>

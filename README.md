@@ -1,6 +1,12 @@
 # First Catering Ltd: Card Credit API
 
-## Adding New Clients
+## Setup
+
+### Installation
+1. Run `npm install` to install Node dependencies required by the application
+2. 
+
+### Adding New Clients
 Run the `newclient` task, passing the name of the client.
 **Example:**
 ```commandline

@@ -1,3 +1,4 @@
+import {describe, it} from 'mocha';
 import chai from 'chai';
 import {generateToken} from '../src/helpers';
 
@@ -20,6 +21,6 @@ describe('helpers', () => {
 
             token.should.be.a('string');
             token.split('').filter((c) => !alphabet.includes(c)).should.be.empty;
-        })
+        });
     });
 });

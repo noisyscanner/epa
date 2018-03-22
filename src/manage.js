@@ -21,8 +21,8 @@ const run = async () => {
     }
 
     switch (command) {
-        case commands.NEWCLIENT:
-            await newclient.run(args);
+    case commands.NEWCLIENT:
+        await newclient.run(args);
     }
 };
 

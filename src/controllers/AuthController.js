@@ -85,16 +85,18 @@ export const tokens = (req, res) => {
     let promise;
 
     switch (grant_type) {
-        case 'card':
-            const {card_number, pin} = req.body;
-            promise = userAuth(card_number, pin);
-            break;
-        case 'client_credentials':
-            const {client_id, client_secret} = req.body;
-            promise = clientAuth(client_id, client_secret);
-            break;
-        default:
-            break;
+    case 'card': {
+        const {card_number, pin} = req.body;
+        promise = userAuth(card_number, pin);
+        break;
+    }
+    case 'client_credentials': {
+        const {client_id, client_secret} = req.body;
+        promise = clientAuth(client_id, client_secret);
+        break;
+    }
+    default:
+        break;
     }
 
     promise
@@ -105,7 +107,7 @@ export const tokens = (req, res) => {
             });
         })
         .catch(({status, error}) => {
-            res.status(status).send({error})
+            res.status(status).send({error});
         });
 };
 

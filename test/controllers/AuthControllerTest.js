@@ -2,7 +2,6 @@ import {describe, it} from 'mocha';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import {server} from '../../src/index';
-import * as AuthController from '../../src/controllers/AuthController';
 import {User} from '../../src/models/User';
 import {createClient, createUser, createUserWithToken} from '../support/helper';
 import {fooClient, fooUserToken, fooUser} from '../support/fixtures';
@@ -26,7 +25,7 @@ describe('AuthController', () => {
                         }
                     });
                     done();
-                })
+                });
         });
 
         it('should return a validation error if grant_type is not present', (done) => {
@@ -44,7 +43,7 @@ describe('AuthController', () => {
                         }
                     });
                     done();
-                })
+                });
         });
 
         it('should return a validation error if card_number is not present for card grant_type', (done) => {
@@ -62,7 +61,7 @@ describe('AuthController', () => {
                         }
                     });
                     done();
-                })
+                });
         });
 
         it('should return a validation error if pin is not present for card grant_type', (done) => {
@@ -80,7 +79,7 @@ describe('AuthController', () => {
                         }
                     });
                     done();
-                })
+                });
         });
 
         it('should return a validation error if client_id is not present for client_credentials grant_type', (done) => {
@@ -98,7 +97,7 @@ describe('AuthController', () => {
                         }
                     });
                     done();
-                })
+                });
         });
 
         it('should return a validation error if client_secret is not present for client_credentials grant_type', (done) => {
@@ -116,7 +115,7 @@ describe('AuthController', () => {
                         }
                     });
                     done();
-                })
+                });
         });
 
         it('should return a 400 error if the client_id and client_secret are invalid', (done) => {
@@ -132,7 +131,7 @@ describe('AuthController', () => {
                     res.body.should.have.nested.property('error.message');
                     res.body.error.message.should.equal('Invalid client credentials');
                     done();
-                })
+                });
         });
 
         it('should return a 404 for a non-existent user', (done) => {
@@ -148,7 +147,7 @@ describe('AuthController', () => {
                     res.body.should.have.nested.property('error.message');
                     res.body.error.message.should.equal('User not found - the card has not been registered yet.');
                     done();
-                })
+                });
         });
 
         it('should return a 201 and valid token for an existing user', (done) => {

@@ -85,17 +85,17 @@ export const userAuthMiddleware = (req, res, next) => {
     });
 };
 
-export const errorHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res) => {
     switch (err.name) {
-        case 'ValidationError':
-            return res.status(400).send({
-                errors: Object.entries(err.errors).reduce((acc, [k, {message}]) => {
-                    acc[k] = message;
-                    return acc;
-                }, {})
-            });
-        default:
-            console.log(err);
-            return res.status(500).send({error: err});
+    case 'ValidationError':
+        return res.status(400).send({
+            errors: Object.entries(err.errors).reduce((acc, [k, {message}]) => {
+                acc[k] = message;
+                return acc;
+            }, {})
+        });
+    default:
+        console.log(err);
+        return res.status(500).send({error: err});
     }
 };

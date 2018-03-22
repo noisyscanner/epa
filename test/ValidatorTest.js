@@ -1,3 +1,4 @@
+import {describe, it} from 'mocha';
 import chai from 'chai';
 import {Validator} from '../src/Validator';
 

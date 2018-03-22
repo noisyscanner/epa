@@ -1,3 +1,4 @@
+import {describe, it, beforeEach} from 'mocha';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import {server} from '../../src';
@@ -71,7 +72,7 @@ describe('UserController', () => {
                         User.count({id: user.id}, (error, count) => {
                             count.should.equal(0);
                             done();
-                        })
+                        });
                     });
             });
         });
@@ -217,13 +218,8 @@ describe('UserController', () => {
     });
 
     describe('/v1/users', () => {
-        let client;
-
         beforeEach((done) => {
-            createClientWithToken(fooClient, fooClientToken, (newClient) => {
-                client = newClient;
-                done();
-            });
+            createClientWithToken(fooClient, fooClientToken, () => done());
         });
 
         describe('POST', () => {

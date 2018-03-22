@@ -10,7 +10,7 @@ hooks.beforeAll((_, done) => {
 });
 
 hooks.beforeEach((_, done) => {
-    clearMongo().then(done)
+    clearMongo().then(done);
 });
 
 hooks.before('Users > Create a new User > Create a new User', (_, done) =>
@@ -19,10 +19,10 @@ hooks.before('Users > Create a new User > Create a new User', (_, done) =>
 hooks.before('Users > Retrieve a User by Card Number and PIN > Retrieve a User by Card Number and PIN', (_, done) =>
     createUser(fooUser, done));
 
-hooks.before("Users > Current User > Retrieve the current User", (_, done) =>
+hooks.before('Users > Current User > Retrieve the current User', (_, done) =>
     createUserWithToken(fooUser, fooUserToken, done));
 
-hooks.before("Users > Current User > Delete the current User", (_, done) =>
+hooks.before('Users > Current User > Delete the current User', (_, done) =>
     createUserWithToken(fooUser, fooUserToken, done));
 
 hooks.before("Users > Current User's Balance > Increment the current User's balance", (_, done) =>
