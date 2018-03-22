@@ -1,26 +1,16 @@
+import uniqueValidator from 'mongoose-unique-validator';
+
 import {AccessTokenSchema} from './AccessTokenSchema';
 import {Schema} from 'mongoose';
 import {BaseSchema} from './BaseSchema';
-
-const uniqueValidator = require('mongoose-unique-validator');
-
-const validateEmployeeID = (employeeID) => true;
-
-const validateEmail = (email) =>
-    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
-
-const validateCardNumber = (cardNumber) => true;
-
-const validatePIN = (pin) => pin >= 1000 && pin <= 9999;
-
-const validateMobileNumber = (number) => /07\d{9}/.test(number);
+import {Validator} from '../../Validator';
 
 export const UserSchema = new Schema({
     employee_id: {
         type: String,
         unique: true,
         required: 'Employee ID is required',
-        validate: [validateEmployeeID, 'Please enter a valid employee ID']
+        validate: [Validator.validateEmployeeID, 'Please enter a valid employee ID']
     },
     first_name: {
         type: String,
@@ -36,24 +26,24 @@ export const UserSchema = new Schema({
         type: String,
         unique: true,
         required: 'Email address is required',
-        validate: [validateEmail, 'Please enter a valid email address']
+        validate: [Validator.validateEmail, 'Please enter a valid email address']
     },
     mobile_number: {
         type: String,
         unique: true,
         required: 'Mobile number is required',
-        validate: [validateMobileNumber, 'Please enter a valid mobile number']
+        validate: [Validator.validateMobileNumber, 'Please enter a valid mobile number']
     },
     card_number: {
         type: String,
         unique: true,
         required: 'Card number is required',
-        validate: [validateCardNumber, 'Please enter a valid card number']
+        validate: [Validator.validateCardNumber, 'Please enter a valid card number']
     },
     pin: {
         type: Number,
         required: 'Please enter a 4 digit PIN number',
-        validate: [validatePIN, 'PIN number must be a 4 digit number']
+        validate: [Validator.validatePIN, 'PIN number must be a 4 digit number']
     },
     balance: {
         type: Number,

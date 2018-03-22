@@ -51,9 +51,31 @@ export class Validator {
     static validateType(value, type) {
         switch (type) {
         case Number:
-            return !!parseFloat(value);
+            return !isNaN(parseFloat(value));
+        case String:
+            return typeof value === 'string';
         default:
             return false;
         }
+    }
+
+    static validateCardNumber = (cardNumber) => /^\d{16}$/.test(cardNumber);
+
+    static validateEmail = (email) =>
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
+
+    static validateEmployeeID = (employeeID) =>
+        /^[A-Z\d]{7}$/.test(employeeID);
+
+    static validateMobileNumber = (number) => /^(?:0|\+44)7\d{9}$/.test(number);
+
+    static validatePIN(pin) {
+        if (!Validator.validateType(pin, String)) {
+            pin = String(pin);
+        }
+
+        const VALID_PIN_LENGTH = 4;
+
+        return pin.length === VALID_PIN_LENGTH && !isNaN(parseInt(pin));
     }
 }

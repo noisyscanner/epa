@@ -14,7 +14,7 @@ This call required a Client Bearer token
     + email (string)
     + mobile_number (string)
     + employee_id (string)
-    + card_number (number)
+    + card_number (string)
     + pin (number)
     + balance (number)
 
@@ -32,7 +32,7 @@ This call required a Client Bearer token
                 "email": "brad@bradreed.co.uk",
                 "mobile_number": "07123456789",
                 "employee_id": "B3AKS22",
-                "card_number": 1234567890,
+                "card_number": "1234567812345678",
                 "pin": 1234
             }
 
@@ -162,7 +162,7 @@ This call required a Client Bearer token
 ## Check if a Card is registered [HEAD /v1/cards/{card_number}]
 
 + Parameters
-    + card_number: `1234567890` (number) Card number to check
+    + card_number: `1234567812345678` (string) Card number to check
 
 + Request
 
@@ -181,14 +181,14 @@ This call required a Client Bearer token
 
 + Attributes
     + grant_type
-    + card_number (number)
+    + card_number (string)
     + pin (number)
 
 + Request (application/json)
 
         {
             "grant_type": "card",
-            "card_number": "1234567890",
+            "card_number": "1234567812345678",
             "pin": 1234
         }
 

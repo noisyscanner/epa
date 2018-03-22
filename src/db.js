@@ -1,3 +1,4 @@
+import * as log from 'loglevel';
 import config from '../config';
 
 const mongoose = require('mongoose');
@@ -7,7 +8,7 @@ export const setupDb = () => {
         ? config.db.uri
         : config.db.uri_test;
 
-    console.log(`Using DB at ${connString}`);
+    log.debug(`Using DB at ${connString}`);
     mongoose.connect(connString);
 };
 

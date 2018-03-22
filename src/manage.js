@@ -1,3 +1,4 @@
+import * as log from 'loglevel';
 import * as newclient from './scripts/newclient';
 
 const commands = {
@@ -5,7 +6,7 @@ const commands = {
 };
 
 function displayHelp() {
-    console.error(`Available commands: ${Object.values(commands).join(', ')}`);
+    log.info(`Available commands: ${Object.values(commands).join(', ')}`);
     process.exit(1);
 }
 

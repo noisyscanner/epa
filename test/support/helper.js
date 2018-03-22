@@ -1,3 +1,4 @@
+import * as log from 'loglevel';
 import {User} from '../../src/models/User';
 import {Client} from '../../src/models/Client';
 
@@ -5,13 +6,13 @@ const clearCollection = (model) => new Promise((resolve, reject) => model.remove
 
 export const clearMongo = () =>
     Promise.all([User, Client].map(clearCollection))
-        .catch(console.log);
+        .catch((err) => log.warn(err));
 
 export const createUser = (userDef, done) => {
     const user = new User(userDef);
     user.save((error) => {
         if (error) {
-            console.error(error);
+            log.error(error);
         }
 
         done(user);
@@ -22,7 +23,7 @@ export const createTokenForModel = (model, tokenDef, done) => {
     model.access_token = tokenDef;
     model.save((error) => {
         if (error) {
-            console.error(error);
+            log.error(error);
         }
 
         done();
@@ -37,7 +38,7 @@ export const createClient = (clientDef, done) => {
     const client = new Client(clientDef);
     client.save((error) => {
         if (error) {
-            console.log(error);
+            log.error(error);
         }
 
         done(client);

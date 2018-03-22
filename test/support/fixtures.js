@@ -4,7 +4,7 @@ export const fooUser = {
     email: 'brad@bradreed.co.uk',
     mobile_number: '07123456789',
     employee_id: 'B3AKS22',
-    card_number: 1234567890,
+    card_number: 1234567812345678,
     pin: 1234,
     balance: 10.07
 };

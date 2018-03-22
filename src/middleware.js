@@ -1,3 +1,4 @@
+import * as log from 'loglevel';
 import {User} from './models/User';
 import {Client} from './models/Client';
 
@@ -85,17 +86,19 @@ export const userAuthMiddleware = (req, res, next) => {
     });
 };
 
-export const errorHandler = (err, req, res) => {
+export const errorHandler = (err, req, res, next) => {
     switch (err.name) {
     case 'ValidationError':
-        return res.status(400).send({
+        res.status(400).send({
             errors: Object.entries(err.errors).reduce((acc, [k, {message}]) => {
                 acc[k] = message;
                 return acc;
             }, {})
         });
+        return;
     default:
-        console.log(err);
-        return res.status(500).send({error: err});
+        log.error(err);
+        res.status(500).send({error: err});
+        return;
     }
 };

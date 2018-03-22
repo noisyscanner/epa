@@ -179,4 +179,102 @@ describe('Validator', () => {
             });
         });
     });
+
+    describe('validateCardNumber', () => {
+        it('should return true for 16 digit card numbers', () => {
+            Validator.validateCardNumber(1234567890123456).should.be.true;
+            Validator.validateCardNumber('1234567890123456').should.be.true;
+        });
+
+        it('should return false for numbers not 16 digits long', () => {
+            Validator.validateCardNumber('12345678').should.be.false;
+            Validator.validateCardNumber('123456781234567812345678').should.be.false;
+        });
+
+        it('should return false for non-numerical inputs', () => {
+            Validator.validateCardNumber('notacardnumber').should.be.false;
+        });
+    });
+
+    describe('validateEmail', () => {
+        it('should return true for valid email addresses', () => {
+            Validator.validateEmail('brad@reed.co.uk').should.be.true;
+        });
+
+        it('should return false for invalid email addresses', () => {
+            Validator.validateEmail('brad@@reed.co.uk').should.be.false;
+            Validator.validateEmail('fake@@email').should.be.false;
+            Validator.validateEmail('don.com').should.be.false;
+            Validator.validateEmail('notanemail').should.be.false;
+        });
+    });
+
+    describe('validateEmployeeID', () => {
+        it('should return true for 7 character alphanumeric employee IDs', () => {
+            Validator.validateEmployeeID('BS9K22D').should.be.true;
+            Validator.validateEmployeeID('A1BCDEF').should.be.true;
+            Validator.validateEmployeeID('1A23456').should.be.true;
+        });
+
+        it('should return false if lower-case letters are used', () => {
+            Validator.validateEmployeeID('aaaaaaa').should.be.false;
+            Validator.validateEmployeeID('62hH2d').should.be.false;
+        });
+
+        it('should return false for strings longer than 7 characters', () => {
+            Validator.validateEmployeeID('ABCDEFG1234').should.be.false;
+        });
+
+        it('should return false for strings shorter than 7 characters', () => {
+            Validator.validateEmployeeID('ABC123').should.be.false;
+        });
+
+        it('should return false for empty values', () => {
+            Validator.validateEmployeeID('').should.be.false;
+            Validator.validateEmployeeID(undefined).should.be.false;
+            Validator.validateEmployeeID(null).should.be.false;
+            Validator.validateEmployeeID(0).should.be.false;
+        });
+    });
+
+    describe('validateMobileNumber', () => {
+        it('should return true for valid UK mobile numbers beginning in 0', () => {
+            Validator.validateMobileNumber('07123456789').should.be.true;
+        });
+
+        it('should return true for valid UK mobile numbers beginning in +44', () => {
+            Validator.validateMobileNumber('+447123456789').should.be.true;
+        });
+
+        it('should return false for other types of phone numbers', () => {
+            Validator.validateMobileNumber('02033445566').should.be.false;
+            Validator.validateMobileNumber('0800001066').should.be.false;
+        });
+    });
+
+    describe('validatePIN', () => {
+        it('should return true for 4 digit pin numbers', () => {
+            Validator.validatePIN(1234).should.be.true;
+            Validator.validatePIN('0000').should.be.true;
+            Validator.validatePIN('9999').should.be.true;
+            Validator.validatePIN(3745).should.be.true;
+            Validator.validatePIN('0999').should.be.true;
+        });
+
+        it('should return false for non-numbers', () => {
+            Validator.validatePIN('notanumber').should.be.false;
+            Validator.validatePIN('').should.be.false;
+            Validator.validatePIN(undefined).should.be.false;
+            Validator.validatePIN(null).should.be.false;
+        });
+
+        it('should return false for non-4-digit numbers', () => {
+            Validator.validatePIN(0).should.be.false;
+            Validator.validatePIN('0').should.be.false;
+            Validator.validatePIN('000').should.be.false;
+            Validator.validatePIN('12345').should.be.false;
+            Validator.validatePIN(12345).should.be.false;
+            Validator.validatePIN('-2345').should.be.false;
+        });
+    });
 });

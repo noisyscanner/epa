@@ -4,6 +4,7 @@
         "node": true
     },
     "extends": "eslint:recommended",
+    "parser": "babel-eslint",
     "parserOptions": {
         "sourceType": "module",
         "ecmaVersion": 2017
@@ -19,8 +20,15 @@
         ],
         "quotes": [
             "error",
-            "single", {
+            "single",
+            {
                 "avoidEscape": true
+            }
+        ],
+        "no-unused-vars": [
+            "error",
+            {
+                "argsIgnorePattern": "next"
             }
         ],
         "semi": [
