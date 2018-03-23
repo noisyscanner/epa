@@ -1,16 +1,13 @@
+import {Schema} from 'mongoose';
 import config from '../../../config.json';
 
-const mongoose = require('mongoose');
-
-const Schema = mongoose.Schema;
-
-export function getExpiry(TOKEN_LIFETIME_MINUTES = config.oauth.user_token_lifetime_minutes) {
+export const getExpiry = (TOKEN_LIFETIME_MINUTES) => () => {
     const date = new Date();
     date.setMinutes(date.getMinutes() + TOKEN_LIFETIME_MINUTES);
     return date;
-}
+};
 
-export const AccessTokenSchema = new Schema({
+export const UserAccessTokenSchema = new Schema({
     token: {
         type: String,
         required: true
@@ -18,6 +15,18 @@ export const AccessTokenSchema = new Schema({
     expires_at: {
         type: Date,
         required: true,
-        default: getExpiry
+        default: getExpiry(config.oauth.user_token_lifetime_minutes)
+    }
+});
+
+export const ClientAccessTokenSchema = new Schema({
+    token: {
+        type: String,
+        required: true
+    },
+    expires_at: {
+        type: Date,
+        required: true,
+        default: getExpiry(config.oauth.client_token_lifetime_minutes)
     }
 });

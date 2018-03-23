@@ -1,7 +1,8 @@
 import {Schema} from 'mongoose';
 import {generateToken} from '../../helpers';
-import {AccessTokenSchema} from './AccessTokenSchema';
+import {ClientAccessTokenSchema, getExpiry} from './AccessTokenSchema';
 import {BaseSchema} from './BaseSchema';
+import config from '../../../config.json';
 
 export const ClientSchema = new Schema({
     name: {
@@ -25,8 +26,22 @@ export const ClientSchema = new Schema({
         default: generateToken
     },
     access_token: {
-        type: AccessTokenSchema
+        type: ClientAccessTokenSchema
     }
 });
+
+ClientSchema.methods.touchToken = function() {
+    return new Promise((resolve, reject) => {
+        this.access_token.expires_at = getExpiry(config.oauth.client_token_lifetime_minutes)();
+        this.save((error) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+
+            resolve();
+        });
+    });
+};
 
 ClientSchema.loadClass(BaseSchema);

@@ -16,6 +16,8 @@
   "author": "Brad Reed <brad@bradreed.co.uk>",
   "license": "ISC",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
@@ -30,14 +32,11 @@
     "proxyquire": "^2.0.1"
   },
   "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
     "express": "^4.16.3",
     "loglevel": "^1.6.1",
     "mongoose": "^5.0.10",
     "mongoose-unique-validator": "^2.0.0",
     "npm": "^5.7.1",
-    "sha1": "^1.1.1",
-    "why-is-node-running": "^2.0.2"
+    "sha1": "^1.1.1"
   }
 }

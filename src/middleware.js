@@ -1,4 +1,4 @@
-import * as log from 'loglevel';
+import log from 'loglevel';
 import {User} from './models/User';
 import {Client} from './models/Client';
 import {findModel} from './fetchers';

@@ -1,8 +1,9 @@
 import uniqueValidator from 'mongoose-unique-validator';
 import sha1 from 'sha1';
-import {AccessTokenSchema} from './AccessTokenSchema';
+import {getExpiry, UserAccessTokenSchema} from './AccessTokenSchema';
 import {Schema} from 'mongoose';
 import {BaseSchema} from './BaseSchema';
+import config from '../../../config.json';
 
 export const UserSchema = new Schema({
     employee_id: {
@@ -44,7 +45,7 @@ export const UserSchema = new Schema({
         default: 0
     },
     access_token: {
-        type: AccessTokenSchema
+        type: UserAccessTokenSchema
     }
 });
 
@@ -62,6 +63,20 @@ UserSchema.pre('save', function (next) {
 
     next();
 });
+
+UserSchema.methods.touchToken = function() {
+    return new Promise((resolve, reject) => {
+        this.access_token.expires_at = getExpiry(config.oauth.user_token_lifetime_minutes)();
+        this.save((error) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+
+            resolve();
+        });
+    });
+};
 
 UserSchema.plugin(uniqueValidator, { message: "'{VALUE}' already exists" });
 

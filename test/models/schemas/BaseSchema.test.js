@@ -38,24 +38,6 @@ describe('BaseSchema', () => {
         });
     });
 
-    describe('touchToken', () => {
-        it('should resolve if successful', () => {
-            const schema = new FakeSchema;
-
-            return schema.touchToken();
-        });
-
-        it('should reject if there was an error', (done) => {
-            const schema = new FakeSchema(errorToReturn);
-
-            schema.touchToken()
-                .catch((error) => {
-                    error.should.equal(errorToReturn);
-                    done();
-                });
-        });
-    });
-
     describe('invalidateToken', () => {
         it('should resolve if the save was successful', () => {
             const schema = new FakeSchema;

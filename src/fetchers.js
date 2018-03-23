@@ -1,6 +1,5 @@
 import sha1 from 'sha1';
-import {Client} from './models/Client';
-import {User} from './models/User';
+import {Client, User} from './models';
 
 export const isCardRegistered = (card_number) => new Promise((resolve, reject) =>
     User.count({card_number: sha1(card_number)}, (error, count) => {

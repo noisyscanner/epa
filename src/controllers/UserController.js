@@ -1,4 +1,4 @@
-import {User} from '../models/User';
+import {User} from '../models';
 import {serialiseUser} from '../serialisers';
 import {ValidationError, Validator} from '../Validator';
 

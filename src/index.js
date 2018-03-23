@@ -1,5 +1,5 @@
 import express from 'express';
-import * as log from 'loglevel';
+import log from 'loglevel';
 import {createRouter} from './routes';
 import {setupDb} from './db';
 

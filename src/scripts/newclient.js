@@ -1,4 +1,4 @@
-import * as log from 'loglevel';
+import log from 'loglevel';
 import {Client} from '../models/Client';
 import {disconnectDb, setupDb} from '../db';
 
@@ -15,6 +15,7 @@ export const makeClient = (name) => new Promise((resolve, reject) => {
 });
 
 export const run = async (args) => {
+    log.setLevel('debug');
     setupDb();
 
     if (args.length === 0) {

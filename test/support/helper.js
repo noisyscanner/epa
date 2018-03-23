@@ -1,4 +1,4 @@
-import * as log from 'loglevel';
+import log from 'loglevel';
 import {User} from '../../src/models/User';
 import {Client} from '../../src/models/Client';
 

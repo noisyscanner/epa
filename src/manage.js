@@ -1,4 +1,4 @@
-import * as log from 'loglevel';
+import log from 'loglevel';
 import * as newclient from './scripts/newclient';
 
 const commands = {
