@@ -1,0 +1,286 @@
+{
+	"info": {
+		"_postman_id": "0592aa6f-cfbf-4943-8d46-6bc0a8dc460f",
+		"name": "EPA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST /users",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"first_name\": \"Brad\",\n\t\"surname\": \"Reed\",\n\t\"email\": \"brad@bradreed.co.uk\",\n\t\"mobile_number\": \"07964755321\",\n\t\"pin\": 1234,\n\t\"card_number\": 123456789,\n\t\"employee_id\": \"AS54PD\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /tokens (card credentials)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"grant_type\": \"card\",\n\t\"card_number\": 123456789,\n\t\"pin\": 1234\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/tokens",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"tokens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /tokens/me",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer d372a14c5dec4460d219d4706aae78a0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/tokens/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"tokens",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /users/me",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer d138502e3607c47157a89853706d8054"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/users/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /tokens (client credentials)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"grant_type\": \"client_credentials\",\n\t\"client_id\": \"f98a6f71d96631e375c1871fb45053c7\",\n\t\"client_secret\": \"789bbc56b3f75f674140d65662b16516\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/tokens",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"tokens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH /users/me/balance",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer a7f4515fe082391430215d8ed7c02ae9"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"add\": 5.72\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/users/me/balance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"users",
+						"me",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /users/me/balance",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 62088aa10a32328a722b194d06fada34"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"add\": 5.72\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/users/me/balance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"users",
+						"me",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /users/me",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer d9d19f99903221eaea0624f96422a10e"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/v1/users/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HEAD /cards/:card_number",
+			"request": {
+				"method": "HEAD",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 670ede23c324cc1dbc8cc93f4e1e2d80"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/v1/cards/123456789",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"cards",
+						"123456789"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
