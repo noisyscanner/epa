@@ -14,11 +14,19 @@ export class Validator {
             const fieldValue = obj[field];
             let errs = [];
 
+            const humanField = field
+                .replace('_', ' ')
+                .replace(/\b[a-z]/g, (letter) => letter.toUpperCase());
+
             // Do 'required' validation before the rest
             // If this fails, skip the rest of the rules
             if (fieldRules.required) {
                 if (!fieldValue || fieldValue.length === 0) {
-                    errs.push(`${field} is required`);
+                    const errMsg = typeof fieldRules.required === 'string'
+                        ? fieldRules.required
+                        : `${humanField} is required`;
+
+                    errs.push(errMsg);
                 }
             }
 
@@ -29,13 +37,29 @@ export class Validator {
                         if (!(ruleValue instanceof Array)) break;
 
                         if (!ruleValue.includes(fieldValue)) {
-                            errs.push(`${field} must be one of: ${ruleValue.join(', ')}`);
+                            errs.push(`${humanField} must be one of: ${ruleValue.join(', ')}`);
                         }
                         break;
                     case 'type':
                         if (!Validator.validateType(fieldValue, ruleValue)) {
-                            errs.push(`${field} must be a ${ruleValue.name}`);
+                            errs.push(`${humanField} must be a ${ruleValue.name}`);
                         }
+                        break;
+                    case 'func': {
+                        let func, errMsg;
+
+                        if (ruleValue instanceof Array) {
+                            [func, errMsg] = ruleValue;
+                        } else {
+                            [func, errMsg] = [ruleValue, `${humanField} must be valid`];
+                        }
+
+                        if (typeof func !== 'function') return;
+
+                        if (!func(fieldValue)) {
+                            errs.push(errMsg);
+                        }
+                    }
                     }
                 });
             }
@@ -77,5 +101,13 @@ export class Validator {
         const VALID_PIN_LENGTH = 4;
 
         return pin.length === VALID_PIN_LENGTH && !isNaN(parseInt(pin));
+    }
+}
+
+export class ValidationError extends Error {
+    constructor(errors) {
+        super();
+        this.message = 'There were some validation errors';
+        this.errors = errors;
     }
 }

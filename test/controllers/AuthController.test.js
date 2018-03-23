@@ -20,7 +20,7 @@ describe('AuthController', () => {
                     res.body.should.deep.equal({
                         errors: {
                             grant_type: [
-                                'grant_type must be one of: card, client_credentials'
+                                'Grant Type must be one of: card, client_credentials'
                             ]
                         }
                     });
@@ -39,7 +39,7 @@ describe('AuthController', () => {
                     res.should.have.status(400);
                     res.body.should.deep.equal({
                         errors: {
-                            grant_type: ['grant_type is required']
+                            grant_type: ['Grant Type is required']
                         }
                     });
                     done();
@@ -57,7 +57,7 @@ describe('AuthController', () => {
                     res.should.have.status(400);
                     res.body.should.deep.equal({
                         errors: {
-                            card_number: ['card_number is required']
+                            card_number: ['Card Number is required']
                         }
                     });
                     done();
@@ -75,7 +75,7 @@ describe('AuthController', () => {
                     res.should.have.status(400);
                     res.body.should.deep.equal({
                         errors: {
-                            pin: ['pin is required']
+                            pin: ['PIN is required']
                         }
                     });
                     done();
@@ -93,7 +93,7 @@ describe('AuthController', () => {
                     res.should.have.status(400);
                     res.body.should.deep.equal({
                         errors: {
-                            client_id: ['client_id is required']
+                            client_id: ['Client ID is required']
                         }
                     });
                     done();
@@ -111,7 +111,7 @@ describe('AuthController', () => {
                     res.should.have.status(400);
                     res.body.should.deep.equal({
                         errors: {
-                            client_secret: ['client_secret is required']
+                            client_secret: ['Client Secret is required']
                         }
                     });
                     done();
@@ -156,8 +156,6 @@ describe('AuthController', () => {
                     chai.request(server)
                         .post('/v1/tokens')
                         .send({
-                            client_id: fooClient.client_id,
-                            client_secret: fooClient.client_secret,
                             grant_type: 'card',
                             card_number: fooUser.card_number,
                             pin: fooUser.pin
@@ -170,6 +168,28 @@ describe('AuthController', () => {
                         })));
         });
 
+        it('should return a 201 and valid token for an existing client', (done) => {
+            createClient(fooClient, (client) =>
+                chai.request(server)
+                    .post('/v1/tokens')
+                    .send({
+                        grant_type: 'client_credentials',
+                        client_id: client.client_id,
+                        client_secret: client.client_secret
+                    })
+                    .end((err, res) => {
+                        res.should.have.status(201);
+                        res.body.should.have.property('access_token');
+                        res.body.should.have.property('expires_at');
+                        done();
+                    }));
+        });
+
+        // TODO:
+        // it('should return a 500 if there was a database error', (done) => {
+        //
+        // });
+
     });
 
     describe('invalidateToken', () => {
@@ -178,8 +198,8 @@ describe('AuthController', () => {
                 .delete('/v1/tokens/me')
                 .end((err, res) => {
                     res.should.have.status(401);
-                    res.body.should.have.property('error');
-                    res.body.error.should.equal('Invalid Authorization');
+                    res.body.should.have.nested.property('error.message');
+                    res.body.error.message.should.equal('Invalid Authorization');
                     done();
                 });
         });

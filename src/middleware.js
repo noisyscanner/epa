@@ -1,100 +1,66 @@
 import * as log from 'loglevel';
 import {User} from './models/User';
 import {Client} from './models/Client';
+import {findModel} from './fetchers';
+import {ValidationError} from './Validator';
 
-const authError = (req, res) => res.status(401).send({error: 'Invalid Authorization'});
+class AuthError extends Error {
+    constructor(message) {
+        super();
+        this.message = message || 'Invalid Authorization';
+    }
+}
 
-export const clientAuthMiddleware = (req, res, next) => {
+const authMiddleware = (model) => (req, res, next) => {
     const authHeader = req.header('Authorization');
     if (!authHeader) {
-        authError(req, res);
-        return;
+        throw new AuthError;
     }
 
     const match = authHeader.match(/Bearer ([a-f0-9]{32})/);
     if (!match) {
-        authError(req, res);
-        return;
+        throw new AuthError;
     }
 
-    Client.findOne({
+    findModel(model, {
         'access_token.token': match[1],
         'access_token.expires_at': {
             $gt: Date.now()
         }
-    }, (error, client) => {
-        if (error) {
-            res.status(500).send({error});
-            return;
-        }
-
-        if (!client) {
-            authError(req, res);
-            return;
-        }
-
-        client.touchToken((error) => {
-            if (error) {
-                res.status(500).send({error});
-                return;
+    })
+        .then((instance) => {
+            if (!instance) {
+                throw new AuthError;
             }
 
-            req.client = client;
-            next();
-        });
-    });
+            return instance.touchToken()
+                .then(() => {
+                    const key = instance.constructor.modelName.toLowerCase();
+                    req[key] = instance;
+                    next();
+                });
+        })
+        .catch(next);
 };
 
-export const userAuthMiddleware = (req, res, next) => {
-    const authHeader = req.header('Authorization');
-    if (!authHeader) {
-        authError(req, res);
-        return;
-    }
-
-    const match = authHeader.match(/Bearer ([a-f0-9]{32})/);
-    if (!match) {
-        authError(req, res);
-        return;
-    }
-
-    User.findOne({
-        'access_token.token': match[1],
-        'access_token.expires_at': {
-            $gt: Date.now()
-        }
-    }, (error, user) => {
-        if (error) {
-            res.status(500).send({error});
-            return;
-        }
-
-        if (!user) {
-            authError(req, res);
-            return;
-        }
-
-        user.touchToken((error) => {
-            if (error) {
-                res.status(500).send({error});
-                return;
-            }
-
-            req.user = user;
-            next();
-        });
-    });
-};
+export const clientAuthMiddleware = authMiddleware(Client);
+export const userAuthMiddleware = authMiddleware(User);
 
 export const errorHandler = (err, req, res, next) => {
-    switch (err.name) {
-    case 'ValidationError':
+    switch (true) {
+    case err.name === 'ValidationError': // Mongoose ValidationError
         res.status(400).send({
             errors: Object.entries(err.errors).reduce((acc, [k, {message}]) => {
                 acc[k] = message;
                 return acc;
             }, {})
         });
+        return;
+    case err instanceof ValidationError: // Our ValidationError
+        res.status(400).send(err);
+        break;
+    case err instanceof AuthError:
+        res.status(401).send({error: err});
         return;
     default:
         log.error(err);

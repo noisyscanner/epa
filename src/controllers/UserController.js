@@ -1,6 +1,6 @@
 import {User} from '../models/User';
 import {serialiseUser} from '../serialisers';
-import {Validator} from '../Validator';
+import {ValidationError, Validator} from '../Validator';
 
 const getUserLinks = () => [
     {
@@ -54,7 +54,7 @@ export const getBalance = (req, res) => {
 // PATCH /v1/users/me/balance
 export const setBalance = (req, res, next) => {
     const errors = new Validator({
-        add: {
+        delta: {
             required: true,
             type: Number
         }
@@ -65,9 +65,14 @@ export const setBalance = (req, res, next) => {
         return;
     }
 
-    const {user, body: {add}} = req;
+    const {user, body: {delta}} = req;
 
-    user.balance += add;
+    if (user.balance + delta < 0) {
+        res.status(400).send({error: {message: 'User does not have sufficient funds'}});
+        return;
+    }
+
+    user.balance += delta;
     user.save((error) => {
         if (error) {
             next(error);
@@ -83,6 +88,41 @@ export const setBalance = (req, res, next) => {
 
 // POST /v1/users
 export const createUser = (req, res, next) => {
+    // Validation is done here, instead of in the Schema, as PIN and card number are hashed
+    const validator = new Validator({
+        first_name: {
+            required: true,
+        },
+        surname: {
+            required: true
+        },
+        mobile_number: {
+            required: true,
+            func: [Validator.validateMobileNumber, 'Please enter a valid mobile number']
+        },
+        employee_id: {
+            required: 'Employee ID is required',
+            func: [Validator.validateEmployeeID, 'Please enter a valid employee ID']
+        },
+        email: {
+            required: true,
+            func: [Validator.validateEmail, 'Please enter a valid email address']
+        },
+        card_number: {
+            required: true,
+            func: [Validator.validateCardNumber, 'Please enter a valid card number']
+        },
+        pin: {
+            required: 'PIN is required',
+            func: [Validator.validatePIN, 'PIN number must be a 4 digit number']
+        }
+    });
+
+    const errors = validator.validate(req.body);
+    if (errors) {
+        throw new ValidationError(errors);
+    }
+
     const user = new User(req.body);
     user.save((error) => {
         if (error) {

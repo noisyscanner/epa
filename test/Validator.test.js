@@ -17,6 +17,24 @@ describe('Validator', () => {
             expect(validator.validate({field1: 'foobar'})).to.be.undefined;
         });
 
+        it('should correctly format the field name in the error messages', () => {
+            const validator = new Validator({
+                first_name: {
+                    required: true
+                },
+                surname: {
+                    required: true
+                }
+            });
+
+            const result = validator.validate({});
+
+            result.should.deep.equal({
+                first_name: ['First Name is required'],
+                surname: ['Surname is required']
+            });
+        });
+
         describe('required', () => {
             it('should validate required fields', () => {
                 const validator = new Validator({
@@ -34,10 +52,10 @@ describe('Validator', () => {
 
                 result.should.deep.equal({
                     field1: [
-                        'field1 is required'
+                        'Field1 is required'
                     ],
                     field2: [
-                        'field2 is required'
+                        'Field2 is required'
                     ]
                 });
             });
@@ -66,7 +84,23 @@ describe('Validator', () => {
 
                 result.should.deep.equal({
                     field1: [
-                        'field1 is required'
+                        'Field1 is required'
+                    ]
+                });
+            });
+
+            it('should use the given validation message if there was one', () => {
+                const validator = new Validator({
+                    field1: {
+                        required: 'Field1 is super important',
+                    }
+                });
+
+                const result = validator.validate({});
+
+                result.should.deep.equal({
+                    field1: [
+                        'Field1 is super important'
                     ]
                 });
             });
@@ -90,9 +124,31 @@ describe('Validator', () => {
 
                 result.should.deep.equal({
                     field2: [
-                        'field2 must be one of: bar, baz'
+                        'Field2 must be one of: bar, baz'
                     ]
                 });
+            });
+
+            it('should skip the rule if a non-array is given to validate against', () => {
+                const validator = new Validator({
+                    field1: {
+                        oneOf: 'notanarray'
+                    },
+                    field2: {
+                        oneOf: null
+                    },
+                    field3: {
+                        oneOf: undefined
+                    }
+                });
+
+                const result = validator.validate({
+                    field1: 'foo',
+                    field2: 'bar',
+                    field3: 'baz',
+                });
+
+                expect(result).to.be.undefined;
             });
         });
 
@@ -141,9 +197,61 @@ describe('Validator', () => {
 
                 result.should.deep.equal({
                     field5: [
-                        'field5 must be a Number'
+                        'Field5 must be a Number'
                     ]
                 });
+            });
+        });
+
+        describe('func', () => {
+            it('should validate against the given function', () => {
+                const validator = new Validator({
+                    field1: {
+                        func: (value) => value === 'foo'
+                    }
+                });
+
+                const result = validator.validate({
+                    field1: 'bar',
+                });
+
+                result.should.deep.equal({
+                    field1: [
+                        'Field1 must be valid'
+                    ]
+                });
+            });
+
+            it('should use the given validation message if there was an error', () => {
+                const validator = new Validator({
+                    field1: {
+                        func: [(value) => value === 'foo', 'Field1 must be foo']
+                    }
+                });
+
+                const result = validator.validate({
+                    field1: 'bar',
+                });
+
+                result.should.deep.equal({
+                    field1: [
+                        'Field1 must be foo'
+                    ]
+                });
+            });
+
+            it('should ignore the rule if a non-function is given', () => {
+                const validator = new Validator({
+                    field1: {
+                        func: 'notafunction'
+                    }
+                });
+
+                const result = validator.validate({
+                    field1: 'bar',
+                });
+
+                expect(result).to.be.undefined;
             });
         });
     });
@@ -176,6 +284,10 @@ describe('Validator', () => {
 
             it('should return false for null', () => {
                 Validator.validateType(null, Number).should.be.false;
+            });
+
+            it('should return false by default for unknown type values', () => {
+                Validator.validateType('somevalue', 'SomeUnknownType').should.be.false;
             });
         });
     });

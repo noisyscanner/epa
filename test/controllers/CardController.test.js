@@ -19,9 +19,9 @@ describe('CardController', () => {
             });
 
             it('should return 200 for existing cards', (done) => {
-                createUser(fooUser, (user) => {
+                createUser(fooUser, () => {
                     req
-                        .head(`/v1/cards/${user.card_number}`)
+                        .head(`/v1/cards/${fooUser.card_number}`)
                         .set('Authorization', `Bearer ${fooClientToken.token}`)
                         .end((err, res) => {
                             res.should.have.status(200);

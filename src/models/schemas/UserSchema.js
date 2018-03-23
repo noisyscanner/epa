@@ -1,16 +1,14 @@
 import uniqueValidator from 'mongoose-unique-validator';
-
+import sha1 from 'sha1';
 import {AccessTokenSchema} from './AccessTokenSchema';
 import {Schema} from 'mongoose';
 import {BaseSchema} from './BaseSchema';
-import {Validator} from '../../Validator';
 
 export const UserSchema = new Schema({
     employee_id: {
         type: String,
         unique: true,
-        required: 'Employee ID is required',
-        validate: [Validator.validateEmployeeID, 'Please enter a valid employee ID']
+        required: 'Employee ID is required'
     },
     first_name: {
         type: String,
@@ -26,24 +24,20 @@ export const UserSchema = new Schema({
         type: String,
         unique: true,
         required: 'Email address is required',
-        validate: [Validator.validateEmail, 'Please enter a valid email address']
     },
     mobile_number: {
         type: String,
         unique: true,
-        required: 'Mobile number is required',
-        validate: [Validator.validateMobileNumber, 'Please enter a valid mobile number']
+        required: 'Mobile number is required'
     },
     card_number: {
         type: String,
         unique: true,
         required: 'Card number is required',
-        validate: [Validator.validateCardNumber, 'Please enter a valid card number']
     },
     pin: {
-        type: Number,
+        type: String,
         required: 'Please enter a 4 digit PIN number',
-        validate: [Validator.validatePIN, 'PIN number must be a 4 digit number']
     },
     balance: {
         type: Number,
@@ -55,15 +49,19 @@ export const UserSchema = new Schema({
 });
 
 UserSchema.path('balance')
-    .get((val) => {
-        if (!val) return 0;
-        return val / 100;
-    })
+    .get((val) => val / 100)
     .set((val) => {
         const floatVal = parseFloat(val);
-        if (!floatVal) return;
+        if (!floatVal) return this.balance;
         return floatVal.toFixed(2) * 100;
     });
+
+UserSchema.pre('save', function (next) {
+    this.card_number = sha1(this.card_number);
+    this.pin = sha1(this.pin);
+
+    next();
+});
 
 UserSchema.plugin(uniqueValidator, { message: "'{VALUE}' already exists" });
 

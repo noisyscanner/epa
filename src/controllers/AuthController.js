@@ -1,53 +1,29 @@
-import {User} from '../models/User';
-import {Client} from '../models/Client';
 import {Validator} from '../Validator';
+import {findClient, findUser} from '../fetchers';
 
-const userAuth = (card_number, pin) => new Promise((resolve, reject) => {
-    User.findOne({card_number, pin}, (error, user) => {
-        if (error) {
-            reject({status: 500, error});
-            return;
-        }
-
-        if (!user) {
-            reject({status: 404, error: {message: 'User not found - the card has not been registered yet.'}});
-            return;
-        }
-
-        user.makeToken((token, error) => {
-            if (error) {
-                reject({status: 500, error});
-                return;
+const userAuth = (card_number, pin) =>
+    findUser({card_number, pin})
+        .then((user) => {
+            if (!user) {
+                // TODO: Actual Error
+                throw {
+                    status: 404,
+                    error: {message: 'User not found - the card has not been registered yet.'}
+                };
             }
 
-            resolve(token);
+            return user.makeToken();
         });
-    });
-});
 
-const clientAuth = (client_id, client_secret) => new Promise((resolve, reject) => {
-    Client.findOne({client_id, client_secret}, (error, client) => {
-        if (error) {
-            reject({status: 500, error});
-            return;
-        }
-
-        if (!client) {
-            reject({status: 400, error: {message: 'Invalid client credentials'}});
-            return;
-        }
-
-        client.makeToken((token, error) => {
-            if (error) {
-                reject({status: 500, error});
-                return;
+const clientAuth = (client_id, client_secret) =>
+    findClient({client_id, client_secret})
+        .then((client) => {
+            if (!client) {
+                throw {status: 400, error: {message: 'Invalid client credentials'}};
             }
 
-            resolve(token);
+            return client.makeToken();
         });
-    });
-});
-
 
 export const tokens = (req, res) => {
     const {grant_type} = req.body;
@@ -62,11 +38,11 @@ export const tokens = (req, res) => {
             when: grant_type === 'card'
         },
         pin: {
-            required: true,
+            required: 'PIN is required',
             when: grant_type === 'card'
         },
         client_id: {
-            required: true,
+            required: 'Client ID is required',
             when: grant_type === 'client_credentials'
         },
         client_secret: {
@@ -95,8 +71,6 @@ export const tokens = (req, res) => {
         promise = clientAuth(client_id, client_secret);
         break;
     }
-    default:
-        break;
     }
 
     promise
@@ -106,18 +80,17 @@ export const tokens = (req, res) => {
                 expires_at: token.expires_at
             });
         })
-        .catch(({status, error}) => {
-            res.status(status).send({error});
+        .catch((error) => {
+            if (error.status) {
+                res.status(error.status).send({error: error.error});
+                return;
+            }
+
+            res.status(500).send({error});
         });
 };
 
-export const invalidateToken = (req, res, next) => {
-    req.user.invalidateToken((error) => {
-        if (error) {
-            next(error);
-            return;
-        }
-
-        res.status(204).send();
-    });
-};
+export const invalidateToken = (req, res, next) =>
+    req.user.invalidateToken()
+        .then(() => res.status(204).send())
+        .catch(next);

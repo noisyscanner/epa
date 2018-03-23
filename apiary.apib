@@ -129,7 +129,7 @@ This call required a Client Bearer token
 
 + Attributes
 
-    + add: 5.55 (number) - Pounds and pence value to add to the user's balance
+    + delta: 5.55 (number) - Pounds and pence value to add to, or subtract from, the user's balance
 
 + Request (application/json)
 
@@ -139,7 +139,7 @@ This call required a Client Bearer token
 
     + Body
 
-            {"add": 5.55}
+            {"delta": 5.55}
 
 + Response 200 (application/json; charset=utf-8)
 
@@ -189,7 +189,7 @@ This call required a Client Bearer token
         {
             "grant_type": "card",
             "card_number": "1234567812345678",
-            "pin": 1234
+            "pin": "1234"
         }
 
 + Response 201 (application/json; charset=utf-8)

@@ -4,6 +4,7 @@
     "uri_test": "mongodb://localhost/epa_test"
   },
   "oauth": {
-    "token_lifetime_minutes": 5
+    "client_token_lifetime_minutes": 180,
+    "user_token_lifetime_minutes": 5
   }
 }

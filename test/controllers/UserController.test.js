@@ -136,28 +136,28 @@ describe('UserController', () => {
                     .set('Authorization', `Bearer ${fooUserToken.token}`);
             });
 
-            it('should return a validation error if the add value is not given', (done) => {
+            it('should return a validation error if the delta value is not given', (done) => {
                 req.end((err, res) => {
                     res.should.have.status(400);
                     res.body.should.have.property('errors').that.is.an('object');
                     res.body.errors.should.deep.equal({
-                        add: ['add is required']
+                        delta: ['Delta is required']
                     });
 
                     done();
                 });
             });
 
-            it('should return a validation error if the add value is not a number', (done) => {
+            it('should return a validation error if the delta value is not a number', (done) => {
                 req
                     .send({
-                        add: 'a tenner'
+                        delta: 'a tenner'
                     })
                     .end((err, res) => {
                         res.should.have.status(400);
                         res.body.should.have.property('errors').that.is.an('object');
                         res.body.errors.should.deep.equal({
-                            add: ['add must be a Number']
+                            delta: ['Delta must be a Number']
                         });
 
                         done();
@@ -167,7 +167,7 @@ describe('UserController', () => {
             it('should increase the user\'s balance if a positive value is given', (done) => {
                 req
                     .send({
-                        add: 5.99
+                        delta: 5.99
                     })
                     .end((err, res) => {
                         res.should.have.status(200);
@@ -178,10 +178,10 @@ describe('UserController', () => {
                     });
             });
 
-            it('should decrease the user\'s balance if a positive value is given', (done) => {
+            it('should decrease the user\'s balance if a negative value is given', (done) => {
                 req
                     .send({
-                        add: -5.99
+                        delta: -5.99
                     })
                     .end((err, res) => {
                         res.should.have.status(200);
@@ -192,10 +192,24 @@ describe('UserController', () => {
                     });
             });
 
+            it('should return a 400 error if trying to spend money the user does not have', (done) => {
+                req
+                    .send({
+                        delta: -10.50
+                    })
+                    .end((err, res) => {
+                        res.should.have.status(400);
+                        res.body.should.have.nested.property('error.message').that.is.a('string');
+                        res.body.error.message.should.equal('User does not have sufficient funds');
+
+                        done();
+                    });
+            });
+
             it('should return the expected links', (done) => {
                 req
                     .send({
-                        add: 5.99
+                        delta: 5.99
                     })
                     .end((err, res) => {
                         res.should.have.status(200);
@@ -279,13 +293,13 @@ describe('UserController', () => {
                         res.should.have.status(400);
                         res.body.should.have.property('errors').that.is.an('object');
                         res.body.errors.should.deep.equal({
-                            first_name: 'First name is required',
-                            surname: 'Surname is required',
-                            email: 'Email address is required',
-                            employee_id: 'Employee ID is required',
-                            mobile_number: 'Mobile number is required',
-                            card_number: 'Card number is required',
-                            pin: 'Please enter a 4 digit PIN number'
+                            first_name: ['First Name is required'],
+                            surname: ['Surname is required'],
+                            email: ['Email is required'],
+                            employee_id: ['Employee ID is required'],
+                            mobile_number: ['Mobile Number is required'],
+                            card_number: ['Card Number is required'],
+                            pin: ['PIN is required']
                         });
 
                         done();
